@@ -1,32 +1,34 @@
 const video = document.getElementById('video');
 const canvas = document.createElement('canvas');
 const context = canvas.getContext('2d');
-const result = document.getElementById('result');
 
-const startButton = document.getElementById('startButton');
-startButton.addEventListener('click', handleStart);
+//    
+HTML Media Captureでカメラを起動
+navigator.mediaDevices.getUserMedia({ video: true })
+  .then(stream => {
+    video.srcObject = stream;
+    video.play();
 
-function handleStart() {
-  navigator.mediaDevices.getUserMedia({ video: true })
-    .then(stream => {
-      video.srcObject = stream;
-      video.play();
+    // 定期的にCanvasに画像を描画
+    setInterval(() => {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      context.drawImage(video, 0, 0, canvas.width, canva   
+s.height);
 
-      setInterval(() => {
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        context.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-        const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-        // QRコードを読み取るライブラリを使用し、imageDataからQRコードの情報を取得
-        const qrResult = QRCode.decode(imageData.data); // 例: jsQRライブラリを使用
-
-        if (qrResult) {
-          result.textContent = qrResult.data;
-        }
-      }, 500);
-    })
-    .catch(error => {
-      console.error('Error accessing media devices.', error);
-    });
-}
+      // Barcode Detection APIで画像解析
+      barcodeDetector.detect(canvas)
+        .then(barcodes => {
+          if (barcodes.length > 0) {
+            // QRコードが見つかった場合の処理
+            console.log(barcodes[0].rawValue);
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    }, 500);
+  })
+  .catch(error => {
+    console.error('Error accessing media devices.', error);
+  });

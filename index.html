@@ -13,32 +13,48 @@
       margin-top: 20px;
       font-size: 18px;
     }
+    #scan-button {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
   <h1>QRコードスキャナー</h1>
+  <button id="scan-button">QRコードをスキャンする</button>
   <div id="reader"></div>
   <div id="result"></div>
 
   <script src="https://unpkg.com/html5-qrcode/dist/html5-qrcode.min.js"></script>
   <script>
-    function onScanSuccess(decodedText, decodedResult) {
-      document.getElementById('result').textContent = 'スキャンデータ: ' + decodedText;
-    }
+    const scanButton = document.getElementById('scan-button');
+    const resultDiv = document.getElementById('result');
 
-    function onScanFailure(error) {
-      console.error('QRコード読み取りエラー', error);
-    }
+    scanButton.addEventListener('click', () => {
+      function onScanSuccess(decodedText, decodedResult) {
+        resultDiv.textContent = 'スキャンデータ: ' + decodedText;
+      }
 
-    let html5QrcodeScanner = new Html5QrcodeScanner(
-      'reader', {
-        fps: 10,
-        qrbox: { width: 250, height: 250 },
-        supportedScanTypes: [Html5QrcodeScanner.ScanType.SCAN_TYPE_CAMERA]
-      },
-      /* verbose= */ false
-    );
-    html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+      function onScanFailure(error) {
+        console.error('QRコード読み取りエラー', error);
+      }
+
+      let html5QrcodeScanner = new Html5QrcodeScanner(
+        'reader', {
+          fps: 10,
+          qrbox: { width: 250, height: 250 },
+          supportedScanTypes: [Html5QrcodeScanner.ScanType.SCAN_TYPE_CAMERA]
+        },
+        /* verbose= */ false
+      );
+      html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+    });
   </script>
 </body>
 </html>

@@ -1,19 +1,44 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QRコードリーダー</title>
-    <link rel="stylesheet" href="styles.css">
+  <title>QRコードスキャナー</title>
+  <style>
+    #reader {
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    #result {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 18px;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <button id="startScan">QRコードをスキャン</button>
-        <div id="reader" width="600px" style="width: 100%;"></div>
-        <p id="result">QRコードの内容がここに表示されます。</p>
-    </div>
+  <h1>QRコードスキャナー</h1>
+  <div id="reader"></div>
+  <div id="result"></div>
 
-    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
-    <script src="script.js"></script>
+  <script src="https://unpkg.com/html5-qrcode/dist/html5-qrcode.min.js"></script>
+  <script>
+    function onScanSuccess(decodedText, decodedResult) {
+      document.getElementById('result').textContent = 'スキャンデータ: ' + decodedText;
+    }
+
+    function onScanFailure(error) {
+      console.error('QRコード読み取りエラー', error);
+    }
+
+    let html5QrcodeScanner = new Html5QrcodeScanner(
+      'reader', {
+        fps: 10,
+        qrbox: { width: 250, height: 250 },
+        supportedScanTypes: [Html5QrcodeScanner.ScanType.SCAN_TYPE_CAMERA]
+      },
+      /* verbose= */ false
+    );
+    html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+  </script>
 </body>
 </html>

@@ -1,62 +1,40 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
-  <title>QRコードスキャナー</title>
-  <style>
-    #reader {
-      width: 100%;
-      max-width: 400px;
-      margin: 0 auto;
-      background-color: white;
-      padding: 20px;
-    }
-    #result {
-      text-align: center;
-      margin-top: 20px;
-      font-size: 18px;
-    }
-    #scan-button {
-      display: block;
-      margin: 20px auto;
-      padding: 10px 20px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QRコードスキャナー</title>
+    <!-- ローカルに保存したhtml5-qrcode.min.jsを参照 -->
+    <script src="html5-qrcode.min.js"></script>
 </head>
 <body>
-  <h1>QRコードスキャナー</h1>
-  <button id="scan-button">QRコードをスキャンする</button>
-  <div id="reader"></div>
-  <div id="result"></div>
+    <h2>QRコードスキャナー</h2>
+    <div id="reader" style="width:100%;"></div>
+    <div id="result"></div>
 
-  <script src="html5-qrcode.min.js"></script>
-  <script>
-    const scanButton = document.getElementById('scan-button');
-    const resultDiv = document.getElementById('result');
+    <script>
+        // QRコードスキャナーの初期化
+        const html5QrcodeScanner = new Html5QrcodeScanner(
+            "reader", 
+            {
+                fps: 10, 
+                qrbox: { width: 250, height: 250 }
+            }, 
+            false
+        );
 
-    scanButton.addEventListener('click', () => {
-      function onScanSuccess(decodedText, decodedResult) {
-        resultDiv.textContent = 'スキャンデータ: ' + decodedText;
-      }
-
-      function onScanFailure(error) {
-        console.error('QRコード読み取りエラー', error);
-      }
-
-      let html5QrcodeScanner = new Html5QrcodeScanner(
-        'reader', {
-          fps: 10,
-          qrbox: { width: 250, height: 250 },
-          supportedScanTypes: [Html5QrcodeScanner.ScanType.SCAN_TYPE_CAMERA]
-        },
-        /* verbose= */ false
-      );
-      html5QrcodeScanner.render(onScanSuccess, onScanFailure);
-    });
-  </script>
+        // スキャンが成功したときのコールバック
+        html5QrcodeScanner.render(
+            (decodedText, decodedResult) => {
+                document.getElementById('result').innerHTML = `
+                    <h3>スキャンデータ:</h3>
+                    <p>${decodedText}</p>
+                `;
+            },
+            (errorMessage) => {
+                console.error(errorMessage);
+            }
+        );
+    </script>
 </body>
 </html>

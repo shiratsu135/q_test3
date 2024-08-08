@@ -1,12 +1,19 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QRコードリーダー</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <video id="video" autoplay muted></video>
-    <canvas id="canvas" style="display: none;"></canvas>
-    <div id="result"></div>
+    <div class="container">
+        <button id="startScan">QRコードをスキャン</button>
+        <div id="reader" width="600px"></div>
+        <p id="result">QRコードの内容がここに表示されます。</p>
+    </div>
 
-    <script src="script.js"></script> </body>
+    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
+    <script src="script.js"></script>
+</body>
 </html>
